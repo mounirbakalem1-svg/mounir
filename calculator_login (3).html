@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آلة حاسبة</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(135deg,#0f172a,#1d4ed8);
+font-family:Tahoma,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:430px;background:#fff;border-radius:24px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.28)}
+h1{margin:0 0 8px;font-size:25px;color:#111827;text-align:center}
+.sub{margin:0 0 22px;text-align:center;color:#64748b}
+label{display:block;margin-bottom:7px;font-weight:700;color:#374151}
+input{width:100%;padding:14px;border:1px solid #d1d5db;border-radius:12px;margin-bottom:15px;font-size:16px;outline:none}
+input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.btn{width:100%;padding:14px;border:0;border-radius:12px;background:#2563eb;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.btn:hover{background:#1d4ed8}
+.error{color:#dc2626;text-align:center;min-height:22px;margin-top:10px;font-size:13px}
+.hidden{display:none!important}
+.calc-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.calc-head h2{margin:0;color:#111827;font-size:22px}
+.logout{padding:9px 12px;border:1px solid #d1d5db;border-radius:10px;background:#fff;cursor:pointer}
+.display{background:#111827;color:#fff;border-radius:14px;padding:18px;font-size:30px;text-align:left;direction:ltr;min-height:70px;overflow:hidden;margin-bottom:13px;word-break:break-all}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.key{height:58px;border:0;border-radius:12px;background:#eef2f7;color:#111827;font-size:19px;font-weight:700;cursor:pointer}
+.key:hover{background:#e2e8f0}
+.op{background:#dbeafe;color:#1d4ed8}
+.eq{background:#2563eb;color:#fff}
+.clear{background:#fee2e2;color:#b91c1c}
+.footer{margin-top:13px;text-align:center;color:#94a3b8;font-size:11px}
+
+#loginView .login-icon{font-size:42px;text-align:center;margin-bottom:8px}
+#loginView h1{margin:0 0 8px}
+#loginView .sub{margin-bottom:22px}
+#loginView label{display:block;margin-bottom:7px;font-weight:700;color:#374151}
+#loginView input{width:100%;padding:14px;border:1px solid #d1d5db;border-radius:12px;margin-bottom:15px;font-size:16px;outline:none}
+#loginView input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+#loginBtn{width:100%;padding:14px;border:0;border-radius:12px;background:#2563eb;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+#loginError{color:#dc2626;text-align:center;min-height:22px;margin-top:10px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="card">
+
+<section id="loginView">
+  <div class="login-icon">🔐</div>
+  <h1>تسجيل الدخول</h1>
+  <p class="sub">أدخل بيانات الدخول لفتح الآلة الحاسبة</p>
+  <label for="username">اسم المستخدم</label>
+  <input id="username" type="text" autocomplete="off" placeholder="أدخل اسم المستخدم">
+  <label for="password">كود الدخول</label>
+  <input id="password" type="password" inputmode="numeric" autocomplete="off" placeholder="أدخل كلمة الدخول">
+  <button id="loginBtn" type="button">دخول</button>
+  <div id="loginError"></div>
+</section>
+
+<section id="calcView">
+  <div class="calc-head">
+    <h2>🧮 آلة حاسبة Mounir</h2>
+  </div>
+  <div class="display" id="display">0</div>
+  <div class="keys">
+    <button class="key clear" data-v="C">C</button>
+    <button class="key op" data-v="DEL">⌫</button>
+    <button class="key op" data-v="%">%</button>
+    <button class="key op" data-v="/">÷</button>
+
+    <button class="key" data-v="7">7</button>
+    <button class="key" data-v="8">8</button>
+    <button class="key" data-v="9">9</button>
+    <button class="key op" data-v="*">×</button>
+
+    <button class="key" data-v="4">4</button>
+    <button class="key" data-v="5">5</button>
+    <button class="key" data-v="6">6</button>
+    <button class="key op" data-v="-">−</button>
+
+    <button class="key" data-v="1">1</button>
+    <button class="key" data-v="2">2</button>
+    <button class="key" data-v="3">3</button>
+    <button class="key op" data-v="+">+</button>
+
+    <button class="key" data-v="0">0</button>
+    <button class="key" data-v=".">.</button>
+    <button class="key eq" data-v="=" style="grid-column:span 2">=</button>
+  </div>
+  <div class="footer">Mounir</div>
+</section>
+
+<section id="calcView" class="hidden">
+  <div class="calc-head">
+    <h2>🧮 الآلة الحاسبة</h2>
+    <button class="logout" id="logoutBtn">خروج</button>
+  </div>
+  <div class="display" id="display">0</div>
+  <div class="keys">
+    <button class="key clear" data-v="C">C</button>
+    <button class="key op" data-v="DEL">⌫</button>
+    <button class="key op" data-v="%">%</button>
+    <button class="key op" data-v="/">÷</button>
+
+    <button class="key" data-v="7">7</button>
+    <button class="key" data-v="8">8</button>
+    <button class="key" data-v="9">9</button>
+    <button class="key op" data-v="*">×</button>
+
+    <button class="key" data-v="4">4</button>
+    <button class="key" data-v="5">5</button>
+    <button class="key" data-v="6">6</button>
+    <button class="key op" data-v="-">−</button>
+
+    <button class="key" data-v="1">1</button>
+    <button class="key" data-v="2">2</button>
+    <button class="key" data-v="3">3</button>
+    <button class="key op" data-v="+">+</button>
+
+    <button class="key" data-v="0">0</button>
+    <button class="key" data-v=".">.</button>
+    <button class="key eq" data-v="=" style="grid-column:span 2">=</button>
+  </div>
+  <div class="footer">اسم المستخدم: mounir</div>
+</section>
+
+</div>
+
+<script>
+const VALID_USER = "mounir";
+const VALID_CODE = "mounir";
+
+const loginView = document.getElementById("loginView");
+const calcView = document.getElementById("calcView");
+const username = document.getElementById("username");
+const password = document.getElementById("password");
+const loginError = document.getElementById("loginError");
+
+loginView.classList.remove("hidden");
+calcView.classList.add("hidden");
+
+document.getElementById("loginBtn").addEventListener("click", () => {
+  if (username.value.trim() === VALID_USER && password.value === VALID_CODE) {
+    loginView.classList.add("hidden");
+    calcView.classList.remove("hidden");
+    loginError.textContent = "";
+  } else {
+    loginError.textContent = "اسم المستخدم أو كود الدخول غير صحيح.";
+    password.value = "";
+    password.focus();
+  }
+});
+
+password.addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("loginBtn").click();
+});
+
+
+const display = document.getElementById("display");
+let expression = "";
+
+function render(value){ display.textContent = value || "0"; }
+
+function calculate(){
+  if(!expression) return;
+  try{
+    const safe = expression.replace(/%/g, "/100");
+    if(!/^[0-9+\-*/(). ]+$/.test(safe)) throw new Error();
+    const result = Function('"use strict"; return (' + safe + ')')();
+    if(!Number.isFinite(result)) throw new Error();
+    expression = String(Math.round(result * 1e12) / 1e12);
+    render(expression);
+  }catch{
+    expression = "";
+    render("خطأ");
+  }
+}
+
+document.querySelectorAll(".key").forEach(button=>{
+  button.addEventListener("click", ()=>{
+    const value = button.dataset.v;
+    if(value === "C"){ expression = ""; render("0"); return; }
+    if(value === "DEL"){ expression = expression.slice(0,-1); render(expression); return; }
+    if(value === "="){ calculate(); return; }
+    if(expression === "0" && /\d/.test(value)) expression = "";
+    if(value === "." && expression.split(/[+\-*/]/).pop().includes(".")) return;
+    expression += value;
+    render(expression);
+  });
+});
+</script>
+</body>
+</html>
